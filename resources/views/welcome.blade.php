@@ -80,6 +80,8 @@
             @endif
 
             <div class="content">
+
+                <img src="{{url('images/ERD.png')}}" class="img-fluid" alt="Responsive image">
                 <div class="title m-b-md">
                     Sanbercode
                 </div>

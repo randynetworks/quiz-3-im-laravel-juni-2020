@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use Illuminate\Http\Request;
 
+
 class ArticlesController extends Controller
 {
     /**
@@ -14,7 +15,8 @@ class ArticlesController extends Controller
      */
     public function index()
     {
-        //
+        $data['articles'] = Article::all();
+        return view('index', $data);
     }
 
     /**
@@ -24,7 +26,7 @@ class ArticlesController extends Controller
      */
     public function create()
     {
-        //
+        return view('create');
     }
 
     /**
@@ -35,7 +37,16 @@ class ArticlesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validasi
+        $request->validate([
+            'title' => 'required|max:255',
+            'slug' => 'required',
+            'isi' => 'required',
+            'tag' => 'required',
+        ]);
+
+        Article::create($request->all());
+        return redirect('/articles')->with('status', 'Data Added');
     }
 
     /**
@@ -57,7 +68,7 @@ class ArticlesController extends Controller
      */
     public function edit(Article $article)
     {
-        //
+        return view('edit', compact('article'));
     }
 
     /**
@@ -69,7 +80,22 @@ class ArticlesController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        //
+        // validasi
+        $request->validate([
+            'title' => 'required|max:255',
+            'slug' => 'required',
+            'isi' => 'required',
+            'tag' => 'required',
+        ]);
+
+        Article::where('id', $article->id)
+            ->update([
+                'title' => $request->title,
+                'slug' => $request->slug,
+                'isi' => $request->isi,
+                'tag' => $request->tag,
+            ]);
+        return redirect('/articles')->with('status', 'Data Edited');
     }
 
     /**
@@ -80,6 +106,7 @@ class ArticlesController extends Controller
      */
     public function destroy(Article $article)
     {
-        //
+        Article::destroy($article->id);
+        return redirect('/articles')->with('status', 'Data Deleted');
     }
 }
